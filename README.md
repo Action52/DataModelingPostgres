@@ -30,10 +30,10 @@ If you want to bring it down after using this repo, simply type `docker-compose 
 
 ### Running the etl.py script
 
-To run the script that extract the jsons from the /data/ folder and transforms it into our psql schema, simply do
+To run the script that extract the jsons from the data/ folder and transforms it into our psql schema, simply do
 `python scripts/etl.py`. These are the flags that can be sent to the script:  
-* **--songs-folder** (**Required**): Path to the folder were all the song jsons are contained. I.e: `/data/song_data/`.
-* **--logs-folder** (**Required**): Path to the folder were all the log jsons are contained. I.e: `/data/log_data/`
+* **--songs-folder** (**Required**): Path to the folder were all the song jsons are contained. I.e: `data/song_data/`.
+* **--logs-folder** (**Required**): Path to the folder were all the log jsons are contained. I.e: `data/log_data/`
 * **--reset-db** (a.k.a: **-r**): If passed, the Postgres db's tables will be dropped and recreated with the
 code in dmp.create_tables.py.
 * **--host** (a.k.a: **-H**): Host ip for the db Default is localhost.
@@ -45,7 +45,7 @@ The user and password to run the project on the local psql service is: user `ale
 
 Example usage:
 ````
-python scripts/etl.py --songs-folder /data/song_data/ --logs-folder /data/log_data/ \
+python scripts/etl.py --songs-folder data/song_data/ --logs-folder data/log_data/ \
     --user aleon --password psqludacity -r
 ````
 
