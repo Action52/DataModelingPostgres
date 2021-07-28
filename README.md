@@ -16,7 +16,7 @@ To run this project on your local machine you will need:
 To install the repository as a Python package open a new terminal window, cd to the root of this project and execute the
 following commands.
 
-`conda create --name dmp python=3.5 --no-default-packages`  
+`conda create --name dmp python=3.6 --no-default-packages`  
 `conda activate dmp`
 
 This commands will create and start a clean conda environment to run the project.
