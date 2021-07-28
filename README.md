@@ -72,3 +72,11 @@ columns include location, session_id, and level.
 
 The advantage of using this relational schema is that while we are sacrificing some write operations, we are able to quickly 
 generate insights with our facts table, without having to perform any JOIN on the tables.
+
+
+References
+
+* https://www.arteco-consulting.com/instalar-postgresql-con-docker/
+* https://www.programiz.com/python-programming/datetime/timestamp-datetime
+* https://naysan.ca/2020/05/09/pandas-to-postgresql-using-psycopg2-bulk-insert-performance-benchmark/
+* https://www.postgresqltutorial.com/postgresql-foreign-key/
