@@ -8,65 +8,120 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
-songplay_table_create = ("CREATE TABLE IF NOT EXISTS songplays (songplay_id SERIAL, start_time VARCHAR, \
-                                                            user_id INTEGER, level VARCHAR, song_id VARCHAR, \
-                                                            artist_id VARCHAR, session_id INTEGER, location VARCHAR, \
-                                                            user_agent VARCHAR, \
-                                                            PRIMARY KEY (songplay_id), \
-                                                            FOREIGN KEY(user_id) REFERENCES users(user_id) \
-                                                                        ON UPDATE CASCADE ON DELETE CASCADE, \
-                                                            FOREIGN KEY(song_id) REFERENCES song(song_id) \
-                                                                        ON UPDATE CASCADE ON DELETE CASCADE, \
-                                                            FOREIGN KEY(artist_id) REFERENCES artist(artist_id) \
-                                                                        ON UPDATE CASCADE ON DELETE CASCADE, \
-                                                            FOREIGN KEY(start_time) REFERENCES time(start_time) \
-                                                                        ON UPDATE CASCADE ON DELETE CASCADE)")
+songplay_table_create = ("""
+    CREATE TABLE IF NOT EXISTS songplays 
+        (
+            songplay_id SERIAL NOT NULL, 
+            start_time  VARCHAR,
+            user_id     INTEGER, 
+            level       VARCHAR, 
+            song_id     VARCHAR, 
+            artist_id   VARCHAR, 
+            session_id  INTEGER, 
+            location    VARCHAR,
+            user_agent  VARCHAR,
+            PRIMARY KEY (songplay_id),
+            FOREIGN KEY(user_id) 
+                REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY(song_id) 
+                REFERENCES song(song_id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY(artist_id) 
+                REFERENCES artist(artist_id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY(start_time) 
+                REFERENCES time(start_time) ON UPDATE CASCADE ON DELETE CASCADE
+        )""")
 
-user_table_create = ("CREATE TABLE IF NOT EXISTS users (user_id INTEGER UNIQUE, first_name VARCHAR, last_name VARCHAR, \
-                                                   gender VARCHAR, level VARCHAR, \
-                                                   PRIMARY KEY (user_id))")
+user_table_create = ("""
+    CREATE TABLE IF NOT EXISTS users 
+        (
+            user_id     INTEGER UNIQUE NOT NULL, 
+            first_name  VARCHAR, 
+            last_name   VARCHAR,
+            gender      VARCHAR, 
+            level       VARCHAR,
+            PRIMARY KEY (user_id)
+        )""")
 
-song_table_create = ("CREATE TABLE IF NOT EXISTS song (song_id VARCHAR, title VARCHAR, artist_id VARCHAR, year INTEGER, \
-                                                   duration FLOAT, \
-                                                   PRIMARY KEY(song_id))")
+song_table_create = ("""
+    CREATE TABLE IF NOT EXISTS song 
+        (
+            song_id     VARCHAR NOT NULL, 
+            title       VARCHAR, 
+            artist_id   VARCHAR, 
+            year        INTEGER,
+            duration    FLOAT,
+            PRIMARY KEY(song_id)
+        )""")
 
-artist_table_create = ("CREATE TABLE IF NOT EXISTS artist (artist_id VARCHAR UNIQUE, name VARCHAR, location VARCHAR, \
-                                                       latitude FLOAT, longitude FLOAT, \
-                                                       PRIMARY KEY(artist_id))")
+artist_table_create = ("""
+    CREATE TABLE IF NOT EXISTS artist 
+        (
+            artist_id   VARCHAR UNIQUE NOT NULL, 
+            name        VARCHAR, 
+            location    VARCHAR,
+            latitude    FLOAT, 
+            longitude   FLOAT,
+            PRIMARY KEY(artist_id)
+        )""")
 
-time_table_create = ("CREATE TABLE IF NOT EXISTS time (start_time VARCHAR, hour VARCHAR, day VARCHAR, week VARCHAR, \
-                                                   month VARCHAR, year VARCHAR, weekday VARCHAR, \
-                                                   PRIMARY KEY (start_time))")
+time_table_create = ("""
+    CREATE TABLE IF NOT EXISTS time 
+        (
+            start_time  VARCHAR NOT NULL, 
+            hour        VARCHAR, 
+            day         VARCHAR, 
+            week        VARCHAR,
+            month       VARCHAR, 
+            year        VARCHAR, 
+            weekday     VARCHAR,
+            PRIMARY KEY (start_time)
+        )""")
 
 # INSERT RECORDS
 
-songplay_table_insert = (" \
-    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
+songplay_table_insert = ("""
+    INSERT INTO songplays 
+        (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""")
 
-songplay_table_copy = ("COPY songplays FROM %s DELIMITER ',' CSV")
+user_table_insert = ("""
+    INSERT INTO users 
+        (user_id, first_name, last_name, gender, level)
+    VALUES (%s, %s, %s, %s, %s) 
+    ON CONFLICT (user_id) DO 
+        UPDATE SET 
+            level=EXCLUDED.level""")
 
-user_table_insert = (" \
-    INSERT INTO users (user_id, first_name, last_name, gender, level) \
-        VALUES (%s, %s, %s, %s, %s)")
+song_table_insert = ("""
+    INSERT INTO song
+        (song_id, title, artist_id, year, duration)
+    VALUES (%s, %s, %s, %s, %s) 
+    ON CONFLICT(song_id) DO NOTHING
+    """)
 
-song_table_insert = (" \
-    INSERT INTO song (song_id, title, artist_id, year, duration) \
-        VALUES (%s, %s, %s, %s, %s)")
+time_table_insert = ("""
+    INSERT INTO time 
+        (start_time, hour, day, week, month, year, weekday) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s) 
+    ON CONFLICT(start_time) DO NOTHING""")
 
-time_table_insert = (" \
-    INSERT INTO time (start_time, hour, day, week, month, year, weekday) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s)")
-
-
-artist_table_insert = (" \
-    INSERT INTO artist (artist_id, name, location, latitude, longitude) \
-        VALUES (%s, %s, %s, %s, %s)")
+artist_table_insert = ("""
+    INSERT INTO artist 
+        (artist_id, name, location, latitude, longitude)
+    VALUES (%s, %s, %s, %s, %s) 
+    ON CONFLICT(artist_id) DO NOTHING""")
 
 # FIND SONGS
 
-song_select = ("SELECT song_id, artist.artist_id FROM (song JOIN artist ON artist.artist_id = song.artist_id) \
-                        WHERE song.title = %s AND artist.name = %s AND song.duration = %s")
+song_select = ("""
+    SELECT 
+        song_id, artist.artist_id 
+    FROM 
+        (song JOIN artist ON artist.artist_id = song.artist_id)
+    WHERE 
+        song.title = %s AND 
+        artist.name = %s AND 
+        song.duration = %s""")
 
 # QUERY LISTS
 

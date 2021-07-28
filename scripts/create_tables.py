@@ -4,6 +4,10 @@ from argparse import ArgumentParser
 
 
 def main():
+    """
+    Main function. Drops the db's tables and then recreates them.
+    :return: None
+    """
     parser = ArgumentParser()
     parser.add_argument("-H", "--host", default="127.0.0.1", help="Host ip for the db.")
     parser.add_argument("-p", "--port", default=5432, help="Port for the db.", type=int)

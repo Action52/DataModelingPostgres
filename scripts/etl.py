@@ -8,11 +8,24 @@ import psycopg2
 from argparse import ArgumentParser
 
 
-def load_data_from_json(df, path):
+def load_data_from_json(df, path) -> pd.DataFrame:
+    """
+    Loads a json into an existing DataFrame.
+    :param df: DataFrame where we are appending the new data.
+    :param path: Path to the json file with data.
+    :return: pd.DataFrame
+    """
     return df.append(pd.read_json(path, lines=True))
 
 
 def load_dataset(df, path):
+    """
+    This function iterates through a folder, extracts the .json files and inserts them into a DataFrame by calling the
+    load_data_from_json function.
+    :param df: DataFrame where we are appending the new data.
+    :param path: Path to the root folder of each data. I.e: data/log_data/
+    :return: pd.DataFrame populated with the json info.
+    """
     for(path, dirnames, filenames) in os.walk(path):
         filepaths = [filename for filename in filenames if ".json" in filename]
         if filepaths:
@@ -22,6 +35,13 @@ def load_dataset(df, path):
 
 
 def query_song(pc: PostgresConnector, query, data):
+    """
+    This function queries a psql database for matches on song name, artist, and length.
+    :param pc:
+    :param query:
+    :param data:
+    :return:
+    """
     try:
         pc.get_cur().execute(query, data)
         results = pc.get_cur().fetchone()
@@ -34,6 +54,10 @@ def query_song(pc: PostgresConnector, query, data):
 
 
 def main():
+    """
+    Main function. Executes the ETL pipeline.
+    :return: None
+    """
     parser = ArgumentParser()
     parser.add_argument("--songs-folder", required=True,
                         help="Path to the folder were all the song jsons are contained.")
