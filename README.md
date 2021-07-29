@@ -5,7 +5,7 @@ Before, they used to store their data in two different sources, the first one co
 with the other containing a set of usage logs by Sparkify's users. This project implements a proposal to correctly save
 this information into a relational schema, with all the advantages that this implies.
 
-## Requirements
+### Requirements
 To run this project on your local machine you will need:
 * Python >= 3.6
 * Docker
